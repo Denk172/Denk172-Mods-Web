@@ -1,6 +1,6 @@
 globalThis.DENK172_DATA = {
   "format": "denk172-catalog/1",
-  "updatedAt": "2026-11-22T10:21:06.102Z",
+  "updatedAt": "2026-11-22T10:22:32.789Z",
   "publication": {
     "repo": "Denk172/Denk172-Mods-Web",
     "branch": "main",
@@ -16,14 +16,14 @@ globalThis.DENK172_DATA = {
       "en": "Pick a game and see what I'm working on."
     },
     "wip": {
-      "visible": false,
+      "visible": true,
       "title": {
-        "cs": "Web se ještě dodělává",
-        "en": "Work in progress"
+        "cs": "WIP",
+        "en": "WIP"
       },
       "message": {
-        "cs": "Mody a screenshoty budu postupně doplňovat.",
-        "en": "I’ll keep adding mods and screenshots."
+        "cs": "Tato stránka je stále ve vývoji, očekávejte chyby\"",
+        "en": "This site is still in development, expect bugs!"
       }
     }
   },
