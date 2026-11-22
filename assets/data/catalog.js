@@ -12,7 +12,7 @@ globalThis.DENK172_DATA = {
       "en": "Pick a game and see what I'm working on."
     },
     "wip": {
-      "visible": true,
+      "visible": false,
       "title": {
         "cs": "Web se ještě dodělává",
         "en": "Work in progress"

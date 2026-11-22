@@ -4,23 +4,76 @@
   const $ = id => document.getElementById(id);
   const form = $('record-form');
   const fields = $('record-fields');
+  const copy = (cs, en) => ({ cs, en });
+  const translations = new WeakMap();
+  const languagePicker = $('admin-language');
+  const languageButtons = languagePicker.querySelectorAll('[data-language]');
+  const loginContext = $('admin-context');
+  const loginHint = copy(loginContext.dataset.cs, loginContext.textContent);
+  let language = 'en';
+
   const sectionNames = {
-    mods: { title: 'Mody', add: 'Přidat mód' },
-    games: { title: 'Hry', add: 'Přidat hru' },
-    categories: { title: 'Kategorie', add: 'Přidat kategorii' },
-    announcements: { title: 'Oznámení', add: 'Přidat oznámení' },
-    settings: { title: 'Nastavení' },
+    mods: { title: copy('Mody', 'Mods'), add: copy('Přidat mód', 'Add mod') },
+    games: { title: copy('Hry', 'Games'), add: copy('Přidat hru', 'Add game') },
+    categories: { title: copy('Kategorie', 'Categories'), add: copy('Přidat kategorii', 'Add category') },
+    announcements: { title: copy('Oznámení', 'Announcements'), add: copy('Přidat oznámení', 'Add announcement') },
   };
   const state = {
     client: null, head: '', base: '', catalog: null, uploads: new Map(),
     section: 'mods', id: null, formDirty: false, busy: false, mediaReaders: [],
   };
   const blankPair = () => ({ cs: '', en: '' });
+  const local = value => typeof value === 'string' ? value : value[language];
+
+  function displayCopy(node, value, attribute) {
+    if (attribute) node.setAttribute(attribute, local(value));
+    else node.textContent = local(value);
+  }
+
+  function setCopy(node, value, attribute = '') {
+    let bindings = translations.get(node);
+    if (typeof value === 'string') {
+      bindings?.delete(attribute);
+    } else {
+      if (!bindings) {
+        bindings = new Map();
+        translations.set(node, bindings);
+        node.setAttribute('data-translated', '');
+      }
+      bindings.set(attribute, value);
+    }
+    displayCopy(node, value, attribute);
+  }
+
+  function setLanguage(next) {
+    language = next === 'cs' ? 'cs' : 'en';
+    document.documentElement.lang = language;
+    for (const node of document.querySelectorAll('[data-translated]')) {
+      for (const [attribute, value] of translations.get(node)) displayCopy(node, value, attribute);
+    }
+    for (const button of languageButtons) button.setAttribute('aria-pressed', String(button.dataset.language === language));
+  }
+
+  function setupLanguages() {
+    for (const [source, attribute] of [['data-cs', ''], ['data-cs-label', 'aria-label'], ['data-cs-placeholder', 'placeholder']]) {
+      for (const node of document.querySelectorAll('[' + source + ']')) {
+        setCopy(node, copy(node.getAttribute(source), attribute ? node.getAttribute(attribute) : node.textContent), attribute);
+      }
+    }
+    let savedLanguage;
+    try { savedLanguage = localStorage.getItem('mods-language'); } catch {}
+    setLanguage(savedLanguage);
+    for (const button of languageButtons) button.addEventListener('click', () => {
+      setLanguage(button.dataset.language);
+      try { localStorage.setItem('mods-language', language); } catch {}
+    });
+    languagePicker.hidden = false;
+  }
 
   function el(tag, className, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
+    if (text !== undefined) setCopy(node, text);
     return node;
   }
 
@@ -32,15 +85,18 @@
   }
 
   function message(node, text = '', error = false) {
-    node.textContent = text;
+    setCopy(node, text);
     node.hidden = !text;
     node.toggleAttribute('data-error', error);
   }
 
   function errorText(error) {
-    if (error.name === 'TimeoutError') return 'GitHub se neozval včas. Úpravy v editoru zůstaly.';
-    if (error instanceof TypeError) return 'Připojení ke GitHubu se nezdařilo. Zkus to znovu.';
-    return String(error.message || error).replace(/github_pat_[a-zA-Z0-9_]+/g, '[klíč]').slice(0, 500);
+    if (error.name === 'TimeoutError') return copy('GitHub se neozval včas. Zkus to znovu.', 'GitHub took too long to respond. Try again.');
+    if (error instanceof TypeError) return copy('Připojení ke GitHubu se nezdařilo. Zkus to znovu.', 'Could not connect to GitHub. Try again.');
+    const redact = (value, replacement) => String(value).replace(/github_pat_[a-zA-Z0-9_]+/g, replacement).slice(0, 500);
+    const cs = error.messages?.cs ?? error.message ?? error;
+    const en = error.messages?.en ?? error.message ?? error;
+    return copy(redact(cs, '[klíč]'), redact(en, '[token]'));
   }
 
   function input(parent, name, label, initial = '', options = {}) {
@@ -50,12 +106,16 @@
     if (!options.choices && !options.lines) control.type = options.type || 'text';
     control.name = name;
     if (options.choices) {
-      for (const [value, text] of options.choices) control.add(new Option(text, value));
+      for (const [value, text] of options.choices) {
+        const option = new Option('', value);
+        setCopy(option, text);
+        control.add(option);
+      }
     }
     if (options.lines) control.rows = options.lines;
     if (options.max) control.maxLength = options.max;
     if (options.required) control.required = true;
-    if (options.placeholder) control.placeholder = options.placeholder;
+    if (options.placeholder) setCopy(control, options.placeholder, 'placeholder');
     if (options.accept) control.accept = options.accept;
     if (control.type !== 'file') control.value = initial;
     wrapper.append(control);
@@ -72,7 +132,7 @@
     for (const [lang, language] of [['cs', 'Čeština'], ['en', 'English']]) {
       controls[lang] = input(columns, name + '-' + lang, language, value[lang], options);
       controls[lang].lang = lang;
-      controls[lang].setAttribute('aria-label', label + ' – ' + language);
+      setCopy(controls[lang], copy(label.cs + ' – ' + language, label.en + ' – ' + language), 'aria-label');
     }
     group.append(columns);
     parent.append(group);
@@ -86,7 +146,7 @@
     control.name = name;
     control.checked = checked;
     control.value = value;
-    wrapper.append(control, document.createTextNode(label));
+    wrapper.append(control, el('span', null, label));
     parent.append(wrapper);
     return control;
   }
@@ -94,7 +154,7 @@
   const control = name => form.elements.namedItem(name);
   const value = name => control(name).value.trim();
   const pairValue = name => ({ cs: value(name + '-cs'), en: value(name + '-en') });
-  const title = record => record?.title?.cs || record?.name?.cs || '';
+  const title = record => record?.title ?? record?.name ?? '';
   const records = () => state.catalog[state.section];
   const active = () => state.section === 'settings' ? null : records().find(record => record.id === state.id);
   const loading = () => state.busy || !state.client;
@@ -107,7 +167,9 @@
     $('reload-catalog').disabled = loading();
     $('publish').disabled = loading() || (!state.formDirty && !hasStagedChanges());
     $('editor-panel').classList.toggle('admin-busy', state.busy);
-    const status = text ?? (state.formDirty ? 'Rozpracované úpravy v otevřené položce.' : hasStagedChanges() ? 'Změny čekají na zveřejnění.' : 'Bez změn.');
+    const status = text ?? (state.formDirty
+      ? copy('Rozpracované úpravy v otevřené položce.', 'Unsaved edits in the open item.')
+      : hasStagedChanges() ? copy('Změny čekají na zveřejnění.', 'Changes are ready to publish.') : copy('Bez změn.', 'No changes.'));
     message($('publish-status'), status, error);
   }
 
@@ -117,7 +179,7 @@
   }
 
   function allowedToLeaveForm() {
-    return !state.formDirty || window.confirm('Zahodit úpravy v této rozepsané položce?');
+    return !state.formDirty || window.confirm(local(copy('Zahodit úpravy v této rozepsané položce?', 'Discard edits to this item?')));
   }
 
   function renderList() {
@@ -129,8 +191,8 @@
       button.setAttribute('aria-pressed', String(button.dataset.section === state.section));
     }
     if (isSettings) return;
-    $('list-title').textContent = sectionNames[state.section].title;
-    $('add-record').textContent = sectionNames[state.section].add;
+    setCopy($('list-title'), sectionNames[state.section].title);
+    setCopy($('add-record'), sectionNames[state.section].add);
     const list = $('record-list');
     list.replaceChildren();
     for (const record of records()) {
@@ -139,14 +201,14 @@
       button.append(el('span', null, title(record)));
       if (record.id === state.id) button.setAttribute('aria-current', 'true');
       const game = state.catalog.games.find(game => game.id === record.gameId);
-      const meta = [game?.name.cs, record.visible ? '' : 'Skryté na webu'].filter(Boolean);
-      if (meta.length) button.append(el('small', null, meta.join(' · ')));
+      const meta = [game?.name, record.visible ? null : copy('Skryté na webu', 'Hidden on site')].filter(Boolean);
+      if (meta.length) button.append(el('small', null, copy(meta.map(label => label.cs).join(' · '), meta.map(label => label.en).join(' · '))));
       button.addEventListener('click', () => select(state.section, record.id));
       const row = el('li');
       row.append(button);
       list.append(row);
     }
-    if (!records().length) list.append(el('li', 'empty-copy', 'Zatím tu nejsou žádné položky.'));
+    if (!records().length) list.append(el('li', 'empty-copy', copy('Zatím tu nejsou žádné položky.', 'No items yet.')));
   }
 
   function select(section, id = null, focus = true) {
@@ -157,8 +219,8 @@
   }
 
   function gameChoices(optional) {
-    const first = optional ? ['', 'Úvodní stránka'] : ['', 'Vyber hru'];
-    return [first, ...state.catalog.games.map(game => [game.id, game.name.cs])];
+    const first = optional ? copy('Úvodní stránka', 'Home page') : copy('Vyber hru', 'Select a game');
+    return [['', first], ...state.catalog.games.map(game => [game.id, game.name])];
   }
 
   function newRecord(section) {
@@ -173,13 +235,14 @@
 
   function mediaFields(parent, records, isGame) {
     const group = el('fieldset', 'admin-group');
-    group.append(el('legend', null, isGame ? 'Obrázek hry' : 'Náhled a screenshoty'));
+    const gameImage = copy('Obrázek hry', 'Game image');
+    group.append(el('legend', null, isGame ? gameImage : copy('Náhled a screenshoty', 'Cover and screenshots')));
     const description = isGame
-      ? 'Vyber JPG, PNG nebo WebP, případně vlož adresu existujícího obrázku.'
-      : 'První obrázek je hlavní náhled. Další se zobrazí v galerii.';
+      ? copy('Vyber JPG, PNG nebo WebP, případně vlož adresu existujícího obrázku.', 'Choose a JPG, PNG or WebP file, or enter an existing image URL.')
+      : copy('První obrázek je hlavní náhled. Další se zobrazí v galerii.', 'The first image is the cover. Additional images appear in the gallery.');
     group.append(el('p', 'field-hint', description));
     const list = el('div');
-    const add = action(isGame ? 'Přidat obrázek hry' : 'Přidat obrázek', () => {
+    const add = action(isGame ? copy('Přidat obrázek hry', 'Add game image') : copy('Přidat obrázek', 'Add image'), () => {
       appendImage();
       markEdited();
     });
@@ -188,7 +251,8 @@
     state.mediaReaders = () => [...list.children].map(row => readers.get(row)());
     function positions() {
       [...list.children].forEach((row, index, rows) => {
-        row.querySelector('strong').textContent = isGame ? 'Obrázek hry' : index === 0 ? 'Hlavní náhled' : 'Obrázek ' + (index + 1);
+        const label = index === 0 ? copy('Hlavní náhled', 'Cover image') : copy('Obrázek ' + (index + 1), 'Image ' + (index + 1));
+        setCopy(row.querySelector('strong'), isGame ? gameImage : label);
         row.querySelector('[data-up]').disabled = index === 0;
         row.querySelector('[data-down]').disabled = index === rows.length - 1;
       });
@@ -198,12 +262,12 @@
       const row = el('div', 'media-editor');
       const header = el('div', 'media-editor-header');
       const tools = el('div', 'admin-inline');
-      const up = action('Výš', () => {
+      const up = action(copy('Výš', 'Move up'), () => {
         if (row.previousElementSibling) list.insertBefore(row, row.previousElementSibling);
         positions();
         markEdited();
       });
-      const down = action('Níže', () => {
+      const down = action(copy('Níže', 'Move down'), () => {
         if (row.nextElementSibling) list.insertBefore(row.nextElementSibling, row);
         positions();
         markEdited();
@@ -211,7 +275,7 @@
       up.setAttribute('data-up', '');
       down.setAttribute('data-down', '');
       up.hidden = down.hidden = isGame;
-      tools.append(up, down, action('Odebrat obrázek', () => {
+      tools.append(up, down, action(copy('Odebrat obrázek', 'Remove image'), () => {
         readers.delete(row);
         row.remove();
         positions();
@@ -220,13 +284,13 @@
       header.append(el('strong'), tools);
       row.append(header);
       const base = 'media-' + nextId++;
-      const src = input(row, base + '-src', 'HTTPS adresa nebo cesta v assets/images', image.src, { max: 2048 });
-      const file = input(row, base + '-file', 'Nahrát soubor (max. 5 MB)', '', { type: 'file', accept: 'image/jpeg,image/png,image/webp' });
+      const src = input(row, base + '-src', copy('HTTPS adresa nebo cesta v assets/images', 'HTTPS URL or path in assets/images'), image.src, { max: 2048 });
+      const file = input(row, base + '-file', copy('Nahrát soubor (max. 5 MB)', 'Upload file (up to 5 MB)'), '', { type: 'file', accept: 'image/jpeg,image/png,image/webp' });
       file.addEventListener('change', () => { if (file.files[0]) src.value = ''; });
       src.addEventListener('input', () => { if (src.value && file.files[0]) file.value = ''; });
-      const captions = pairFields(row, base + '-caption', 'Popis obrázku', image.caption, { max: 240 });
-      const fit = input(row, base + '-fit', 'Zobrazení náhledu', image.fit, {
-        choices: [['contain', 'Celý obrázek'], ['cover', 'Vyplnit rámeček']],
+      const captions = pairFields(row, base + '-caption', copy('Popis obrázku', 'Image description'), image.caption, { max: 240 });
+      const fit = input(row, base + '-fit', copy('Zobrazení náhledu', 'Image fit'), image.fit, {
+        choices: [['contain', copy('Celý obrázek', 'Show full image')], ['cover', copy('Vyplnit rámeček', 'Fill frame')]],
       });
       readers.set(row, () => {
         const source = src.value.trim();
@@ -247,55 +311,55 @@
 
   function renderMod(record) {
     const columns = el('div', 'admin-columns');
-    input(columns, 'game', 'Hra', record.gameId, { choices: gameChoices(false), required: true });
-    input(columns, 'status', 'Stav', record.status, {
-      choices: Object.entries(format.STATUS).map(([id, names]) => [id, names.cs]),
+    input(columns, 'game', copy('Hra', 'Game'), record.gameId, { choices: gameChoices(false), required: true });
+    input(columns, 'status', copy('Stav', 'Status'), record.status, {
+      choices: Object.entries(format.STATUS),
     });
     fields.append(columns);
-    pairFields(fields, 'title', 'Název módu', record.title, { max: 140, required: true });
-    pairFields(fields, 'description', 'Popis módu', record.description, { max: 2500, lines: 4, required: true });
-    pairFields(fields, 'note', 'Poznámka nebo požadavky (volitelné)', record.note, { max: 1200, lines: 2 });
+    pairFields(fields, 'title', copy('Název módu', 'Mod title'), record.title, { max: 140, required: true });
+    pairFields(fields, 'description', copy('Popis módu', 'Mod description'), record.description, { max: 2500, lines: 4, required: true });
+    pairFields(fields, 'note', copy('Poznámka nebo požadavky (volitelné)', 'Notes or requirements (optional)'), record.note, { max: 1200, lines: 2 });
     const links = el('div', 'admin-columns');
-    input(links, 'version', 'Verze (volitelné)', record.version, { max: 60, placeholder: '1.0.0' });
-    input(links, 'platform', 'Text odkazu (volitelné)', record.platform, { max: 80, placeholder: 'Nexus Mods' });
+    input(links, 'version', copy('Verze (volitelné)', 'Version (optional)'), record.version, { max: 60, placeholder: '1.0.0' });
+    input(links, 'platform', copy('Text odkazu (volitelné)', 'Link label (optional)'), record.platform, { max: 80, placeholder: 'Nexus Mods' });
     fields.append(links);
-    input(fields, 'url', 'Odkaz na mód (volitelné)', record.url, { type: 'url', max: 2048, placeholder: 'https://' });
+    input(fields, 'url', copy('Odkaz na mód (volitelné)', 'Mod link (optional)'), record.url, { type: 'url', max: 2048, placeholder: 'https://' });
     const group = el('fieldset', 'admin-group');
-    group.append(el('legend', null, 'Kategorie'));
+    group.append(el('legend', null, sectionNames.categories.title));
     const choices = el('div', 'category-choices');
     for (const category of state.catalog.categories) {
-      checkbox(choices, 'category', category.name.cs, record.categoryIds.includes(category.id), category.id);
+      checkbox(choices, 'category', category.name, record.categoryIds.includes(category.id), category.id);
     }
-    if (!choices.childElementCount) choices.append(el('p', 'field-hint', 'Kategorie můžeš vytvořit v záložce Kategorie.'));
+    if (!choices.childElementCount) choices.append(el('p', 'field-hint', copy('Kategorie můžeš vytvořit v záložce Kategorie.', 'Add categories in the Categories tab.')));
     group.append(choices);
     fields.append(group);
     mediaFields(fields, record.images, false);
   }
 
   function renderGame(record) {
-    pairFields(fields, 'name', 'Název hry', record.name, { max: 120, required: true });
-    pairFields(fields, 'caption', 'Podtitul dlaždice (volitelné)', record.caption, { max: 120 });
-    pairFields(fields, 'description', 'Popis hry (volitelné)', record.description, { max: 600, lines: 3 });
+    pairFields(fields, 'name', copy('Název hry', 'Game name'), record.name, { max: 120, required: true });
+    pairFields(fields, 'caption', copy('Podtitul dlaždice (volitelné)', 'Game tile subtitle (optional)'), record.caption, { max: 120 });
+    pairFields(fields, 'description', copy('Popis hry (volitelné)', 'Game description (optional)'), record.description, { max: 600, lines: 3 });
     mediaFields(fields, record.cover ? [record.cover] : [], true);
   }
 
   function renderAnnouncement(record) {
-    input(fields, 'game', 'Kde se má oznámení zobrazit', record.gameId, { choices: gameChoices(true) });
-    pairFields(fields, 'title', 'Nadpis oznámení', record.title, { max: 120, required: true });
-    pairFields(fields, 'message', 'Text oznámení', record.message, { max: 2500, lines: 5, required: true });
-    input(fields, 'url', 'Odkaz (volitelné)', record.url, { type: 'url', max: 2048, placeholder: 'https://' });
+    input(fields, 'game', copy('Kde se má oznámení zobrazit', 'Where to show the announcement'), record.gameId, { choices: gameChoices(true) });
+    pairFields(fields, 'title', copy('Nadpis oznámení', 'Announcement title'), record.title, { max: 120, required: true });
+    pairFields(fields, 'message', copy('Text oznámení', 'Announcement text'), record.message, { max: 2500, lines: 5, required: true });
+    input(fields, 'url', copy('Odkaz (volitelné)', 'Link (optional)'), record.url, { type: 'url', max: 2048, placeholder: 'https://' });
   }
 
   function renderSettings() {
     const settings = state.catalog.settings;
-    pairFields(fields, 'heading', 'Nadpis úvodní stránky', settings.heading, { max: 100, required: true });
-    pairFields(fields, 'intro', 'Úvodní text (volitelné)', settings.intro, { max: 300, lines: 2 });
+    pairFields(fields, 'heading', copy('Nadpis úvodní stránky', 'Home page heading'), settings.heading, { max: 100, required: true });
+    pairFields(fields, 'intro', copy('Úvodní text (volitelné)', 'Introduction (optional)'), settings.intro, { max: 300, lines: 2 });
     const group = el('fieldset', 'admin-group');
-    group.append(el('legend', null, 'Žluté upozornění'));
-    checkbox(group, 'wip-visible', 'Zobrazit upozornění nahoře na webu', settings.wip.visible);
+    group.append(el('legend', null, copy('Žluté upozornění', 'Yellow notice')));
+    checkbox(group, 'wip-visible', copy('Zobrazit upozornění nahoře na webu', 'Show the notice at the top of the site'), settings.wip.visible);
     fields.append(group);
-    pairFields(fields, 'wip-title', 'Nadpis upozornění', settings.wip.title, { max: 100, required: true });
-    pairFields(fields, 'wip-message', 'Text upozornění', settings.wip.message, { max: 400, lines: 3, required: true });
+    pairFields(fields, 'wip-title', copy('Nadpis upozornění', 'Notice title'), settings.wip.title, { max: 100, required: true });
+    pairFields(fields, 'wip-message', copy('Text upozornění', 'Notice text'), settings.wip.message, { max: 400, lines: 3, required: true });
   }
 
   function renderEditor(focus = false) {
@@ -307,7 +371,7 @@
     const isSettings = state.section === 'settings';
     const record = active();
     const header = $('record-title');
-    header.textContent = isSettings ? 'Nastavení webu' : record ? title(record) : sectionNames[state.section].add;
+    setCopy(header, isSettings ? copy('Nastavení webu', 'Site settings') : record ? title(record) : sectionNames[state.section].add);
     $('record-actions').hidden = false;
     if (isSettings) {
       renderSettings();
@@ -315,24 +379,24 @@
       const item = record || newRecord(state.section);
       if (state.section === 'mods') renderMod(item);
       if (state.section === 'games') renderGame(item);
-      if (state.section === 'categories') pairFields(fields, 'name', 'Název kategorie', item.name, { max: 80, required: true });
+      if (state.section === 'categories') pairFields(fields, 'name', copy('Název kategorie', 'Category name'), item.name, { max: 80, required: true });
       if (state.section === 'announcements') renderAnnouncement(item);
       const visibility = el('fieldset', 'admin-group');
-      visibility.append(el('legend', null, 'Viditelnost'));
-      checkbox(visibility, 'visible', 'Zobrazit na webu', item.visible);
-      visibility.append(el('p', 'field-hint', 'Skrytá položka zmizí z webu. V souborech veřejného repozitáře zůstává čitelná.'));
+      visibility.append(el('legend', null, copy('Viditelnost', 'Visibility')));
+      checkbox(visibility, 'visible', copy('Zobrazit na webu', 'Show on site'), item.visible);
+      visibility.append(el('p', 'field-hint', copy('Skrytá položka zmizí z webu. V souborech veřejného repozitáře zůstává čitelná.', 'Hidden items are still readable in the files of a public repository.')));
       fields.append(visibility);
       if (record) {
         const management = el('div', 'admin-inline record-management');
         const order = el('div', 'admin-inline');
         const siblings = state.section === 'mods' ? records().filter(item => item.gameId === record.gameId) : records();
         const index = siblings.findIndex(item => item.id === state.id);
-        const up = action('Posunout výš', () => moveRecord(-1), 'quiet');
-        const down = action('Posunout níž', () => moveRecord(1), 'quiet');
+        const up = action(copy('Posunout výš', 'Move up'), () => moveRecord(-1), 'quiet');
+        const down = action(copy('Posunout níž', 'Move down'), () => moveRecord(1), 'quiet');
         up.disabled = index <= 0;
         down.disabled = index >= siblings.length - 1;
         order.append(up, down);
-        management.append(order, action('Odstranit položku', removeRecord, 'danger'));
+        management.append(order, action(copy('Odstranit položku', 'Remove item'), removeRecord, 'danger'));
         fields.append(management);
       }
     }
@@ -342,7 +406,7 @@
 
   function moveRecord(direction) {
     if (state.formDirty) {
-      message($('form-message'), 'Nejdřív ulož nebo zruš právě rozepsané úpravy.', true);
+      message($('form-message'), copy('Nejdřív ulož nebo zruš právě rozepsané úpravy.', 'Save or cancel the current edits first.'), true);
       return;
     }
     const items = records();
@@ -359,11 +423,13 @@
     if (!allowedToLeaveForm()) return;
     const record = active();
     if (state.section === 'games' && [...state.catalog.mods, ...state.catalog.announcements].some(item => item.gameId === record.id)) {
-      message($('form-message'), 'Nejdřív přesuň nebo odstraň mody a oznámení této hry. Hru můžeš mezitím skrýt.', true);
+      message($('form-message'), copy('Nejdřív přesuň nebo odstraň mody a oznámení této hry. Hru můžeš mezitím skrýt.', 'Move or remove this game’s mods and announcements first. You can hide the game in the meantime.'), true);
       return;
     }
-    const warning = state.section === 'categories' ? ' Přiřazení téhle kategorie se odebere i z modů.' : '';
-    if (!window.confirm('Přidat odstranění „' + title(record) + '“ do změn?' + warning)) return;
+    const name = local(title(record));
+    const question = copy('Přidat odstranění „' + name + '“ do změn?', 'Stage removal of “' + name + '”?');
+    const warning = copy(' Přiřazení téhle kategorie se odebere i z modů.', ' This category will also be removed from its mods.');
+    if (!window.confirm(local(question) + (state.section === 'categories' ? local(warning) : ''))) return;
     state.catalog[state.section] = records().filter(item => item.id !== record.id);
     if (state.section === 'categories') {
       for (const mod of state.catalog.mods) mod.categoryIds = mod.categoryIds.filter(id => id !== record.id);
@@ -383,18 +449,18 @@
   }
 
   async function uploadImage(file, id) {
-    if (file.size > format.IMAGE_BYTES) throw new Error('Soubor „' + file.name + '“ je větší než 5 MB.');
+    if (file.size > format.IMAGE_BYTES) throw new format.LocalizedError('Soubor „' + file.name + '“ je větší než 5 MB.', '“' + file.name + '” is larger than 5 MB.');
     const header = new Uint8Array(await file.slice(0, 12).arrayBuffer());
     let extension = '';
     if (header[0] === 0xff && header[1] === 0xd8 && header[2] === 0xff) extension = 'jpg';
     if (String.fromCharCode(...header.slice(0, 8)) === '\x89PNG\r\n\x1a\n') extension = 'png';
     if (String.fromCharCode(...header.slice(0, 4)) === 'RIFF' && String.fromCharCode(...header.slice(8, 12)) === 'WEBP') extension = 'webp';
-    if (!extension) throw new Error('Soubor „' + file.name + '“ musí být JPG, PNG nebo WebP.');
+    if (!extension) throw new format.LocalizedError('Soubor „' + file.name + '“ musí být JPG, PNG nebo WebP.', '“' + file.name + '” must be a JPG, PNG or WebP file.');
     let bitmap;
     try {
       bitmap = await createImageBitmap(file);
     } catch {
-      throw new Error('Obrázek „' + file.name + '“ se nepodařilo otevřít.');
+      throw new format.LocalizedError('Obrázek „' + file.name + '“ se nepodařilo otevřít.', 'Could not open the image “' + file.name + '”.');
     }
     const { width, height } = bitmap;
     bitmap.close();
@@ -406,12 +472,12 @@
     const images = [];
     for (const { record, file } of state.mediaReaders()) {
       if (!file && !record.src && !record.caption.cs && !record.caption.en) continue;
-      if (!record.caption.cs || !record.caption.en) throw new Error('Doplň český i anglický popis obrázku.');
+      if (!record.caption.cs || !record.caption.en) throw new format.LocalizedError('Doplň český i anglický popis obrázku.', 'Enter both Czech and English image descriptions.');
       if (file) {
         Object.assign(record, await uploadImage(file, id));
         uploads.set(record.src, file);
       }
-      if (!format.imageSource(record.src)) throw new Error('U obrázku vyber soubor nebo zadej platnou adresu.');
+      if (!format.imageSource(record.src)) throw new format.LocalizedError('U obrázku vyber soubor nebo zadej platnou adresu.', 'Choose an image file or enter a valid URL.');
       images.push(record);
     }
     return images;
@@ -468,7 +534,7 @@
     state.id = nextId;
     pruneUploads();
     renderEditor();
-    message($('form-message'), 'Uloženo do změn.');
+    message($('form-message'), copy('Uloženo do změn.', 'Changes staged.'));
     return true;
   }
 
@@ -491,22 +557,25 @@
     if (state.formDirty && !form.reportValidity()) return;
     state.busy = true;
     $('commit-link').hidden = true;
-    updateControls('Připravuju změny ke zveřejnění…');
+    updateControls(copy('Připravuju změny ke zveřejnění…', 'Preparing changes to publish…'));
     try {
       if (state.formDirty && !await stage()) return;
       if (!hasStagedChanges()) return;
-      updateControls('Ukládám katalog a obrázky na GitHub…');
+      updateControls(copy('Ukládám katalog a obrázky na GitHub…', 'Saving the catalog and images to GitHub…'));
       const published = structuredClone(state.catalog);
       const previousTime = Date.parse(published.updatedAt) || 0;
       published.updatedAt = new Date(Math.max(Date.now(), previousTime + 1)).toISOString();
       published.publication = state.client.publication;
       const latest = await state.client.read();
       if (latest.head !== state.head && !sameAsBase(latest.catalog)) {
-        throw new Error('Obsah na GitHubu se mezitím změnil. Tvoje úpravy zůstaly v editoru. Před dalším zveřejněním zkontroluj změnu v repozitáři.');
+        throw new format.LocalizedError(
+          'Obsah na GitHubu se mezitím změnil. Tvoje úpravy zůstaly v editoru. Před dalším zveřejněním zkontroluj změnu v repozitáři.',
+          'The catalog changed on GitHub while you were editing. Your edits are still here. Review the repository changes before publishing again.',
+        );
       }
       let result;
       try {
-        result = await state.client.publish(latest.head, published, state.uploads);
+        result = await state.client.publish(latest, published, state.uploads);
       } catch (error) {
         const checked = await state.client.read().catch(() => null);
         if (!checked || normalized(checked.catalog) !== normalized(published)) throw error;
@@ -517,7 +586,7 @@
       link.href = result.url;
       link.hidden = false;
       state.busy = false;
-      updateControls('Změny jsou uložené na GitHubu. Návštěvníkům se načtou po aktualizaci obsahu.');
+      updateControls(copy('Změny jsou uložené na GitHubu. Návštěvníkům se načtou po aktualizaci obsahu.', 'Your changes are saved on GitHub. Visitors will see them when the site refreshes its content.'));
     } catch (error) {
       state.busy = false;
       updateControls(errorText(error), true);
@@ -561,7 +630,7 @@
     const token = $('token').value.trim();
     $('token').value = '';
     $('connect').disabled = true;
-    message($('login-message'), 'Načítám katalog z GitHubu…');
+    message($('login-message'), copy('Načítám katalog z GitHubu…', 'Loading the catalog from GitHub…'));
     try {
       const client = await globalThis.ModsGitHub.connect({ repo, branch, prefix, token });
       const result = await client.read();
@@ -569,7 +638,7 @@
       setLoaded(result);
       $('login-panel').hidden = true;
       $('editor-panel').hidden = $('disconnect').hidden = false;
-      $('admin-context').textContent = client.account + ' · ' + client.target.repo + ' · ' + client.target.branch;
+      setCopy(loginContext, client.account + ' · ' + client.target.repo + ' · ' + client.target.branch);
       try { localStorage.setItem('mods-admin-target', JSON.stringify(client.target)); } catch {}
     } catch (error) {
       message($('login-message'), errorText(error), true);
@@ -580,22 +649,24 @@
 
   async function reload() {
     if (loading()) return;
-    if ((state.formDirty || hasStagedChanges()) && !window.confirm('Zahodit místní úpravy a načíst aktuální obsah z GitHubu?')) return;
+    const question = copy('Zahodit místní úpravy a načíst aktuální obsah z GitHubu?', 'Discard local edits and reload the catalog from GitHub?');
+    if ((state.formDirty || hasStagedChanges()) && !window.confirm(local(question))) return;
     state.busy = true;
-    updateControls('Načítám aktuální katalog…');
+    updateControls(copy('Načítám aktuální katalog…', 'Reloading the catalog…'));
     try {
       setLoaded(await state.client.read());
       state.busy = false;
       $('commit-link').hidden = true;
-      updateControls('Katalog je načtený.');
+      updateControls(copy('Katalog je načtený.', 'Catalog reloaded.'));
     } catch (error) {
       state.busy = false;
       updateControls(errorText(error), true);
     }
   }
 
-  const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
-  if (window.top !== window.self || !(location.protocol === 'https:' || (location.protocol === 'http:' && local))) {
+  setupLanguages();
+  const loopback = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+  if (window.top !== window.self || !(location.protocol === 'https:' || (location.protocol === 'http:' && loopback))) {
     $('admin-unavailable').hidden = false;
     return;
   }
@@ -603,7 +674,8 @@
   setupDefaults();
   $('login-form').addEventListener('submit', login);
   $('disconnect').addEventListener('click', () => {
-    if ((state.formDirty || hasStagedChanges()) && !window.confirm('Odhlásit se a zahodit místní úpravy?')) return;
+    const question = copy('Odhlásit se a zahodit místní úpravy?', 'Sign out and discard local edits?');
+    if ((state.formDirty || hasStagedChanges()) && !window.confirm(local(question))) return;
     state.client = null;
     state.catalog = null;
     state.uploads.clear();
@@ -613,7 +685,7 @@
     $('editor-panel').hidden = $('disconnect').hidden = true;
     $('login-panel').hidden = false;
     $('commit-link').hidden = true;
-    $('admin-context').textContent = 'Připoj repozitář, ze kterého GitHub Pages zobrazuje tvůj web.';
+    setCopy(loginContext, loginHint);
     message($('login-message'));
     $('token').focus();
   });

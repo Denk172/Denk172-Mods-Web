@@ -1,5 +1,6 @@
 .admin-page-inner { width: min(100% - 3rem, 1130px); }
 .admin-header { min-height: 4.5rem; }
+.admin-header .header-right { flex-wrap: wrap; justify-content: flex-end; gap: .5rem; padding-block: .35rem; }
 .admin-page main { padding-bottom: 2rem; }
 .admin-heading { padding: 2rem 0 1.25rem; }
 .admin-heading h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: .4rem; letter-spacing: -.055em; }
