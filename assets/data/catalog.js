@@ -1,6 +1,6 @@
 globalThis.DENK172_DATA = {
   "format": "denk172-catalog/1",
-  "updatedAt": "2026-11-22T10:23:16.812Z",
+  "updatedAt": "2026-11-22T10:23:52.207Z",
   "publication": {
     "repo": "Denk172/Denk172-Mods-Web",
     "branch": "main",
@@ -561,7 +561,7 @@ globalThis.DENK172_DATA = {
         "cs": "WIP",
         "en": "WIP"
       },
-      "visible": true,
+      "visible": false,
       "gameId": "",
       "message": {
         "cs": "Stránka je stále ve vývoji, očekávejte chyby!",
