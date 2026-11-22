@@ -1,7 +1,11 @@
 globalThis.DENK172_DATA = {
   "format": "denk172-catalog/1",
-  "updatedAt": null,
-  "publication": null,
+  "updatedAt": "2026-11-22T10:18:36.466Z",
+  "publication": {
+    "repo": "Denk172/Denk172-Mods-Web",
+    "branch": "main",
+    "prefix": ""
+  },
   "settings": {
     "heading": {
       "cs": "Moje mody",
@@ -550,5 +554,20 @@ globalThis.DENK172_DATA = {
       "images": []
     }
   ],
-  "announcements": []
+  "announcements": [
+    {
+      "id": "testen",
+      "title": {
+        "cs": "testCZ",
+        "en": "testEN"
+      },
+      "visible": true,
+      "gameId": "",
+      "message": {
+        "cs": "testCZdesc",
+        "en": "testENdesc"
+      },
+      "url": ""
+    }
+  ]
 };
