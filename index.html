@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f8f7f4">
-  <meta name="description" content="Herní mody od Denk172. Derail Valley, Transport Fever 3, Farming Simulator 25 a Euro Truck Simulator 2.">
+  <meta name="description" content="Game mods, screenshots and announcements from Denk172.">
   <title>Denk172 Mods</title>
   <link rel="icon" href="data:,">
   <script src="assets/js/init.js"></script>
@@ -14,6 +14,13 @@
 <body>
   <a class="skip-link" href="#content" data-en="Skip to content">Přejít na obsah</a>
   <div class="page">
+    <aside class="wip-notice" id="wip-notice" aria-labelledby="wip-title" hidden>
+      <div>
+        <strong id="wip-title"></strong>
+        <p id="wip-message"></p>
+      </div>
+      <button class="wip-close" type="button" aria-label="Zavřít upozornění" data-label-en="Dismiss notice">×</button>
+    </aside>
     <header class="header">
       <a class="wordmark" href="#hry" aria-label="Denk172 Mods — všechny hry" data-label-en="Denk172 Mods — all games">Denk172 Mods</a>
       <div class="header-right">
@@ -28,147 +35,27 @@
       </div>
     </header>
 
-    <main id="content">
+    <main id="content" tabindex="-1">
+      <noscript><p lang="en">Enable JavaScript to browse the mods and galleries.</p></noscript>
+      <p id="catalog-error" data-en="The mod catalog could not be loaded." hidden>Katalog modů se nepodařilo načíst.</p>
       <div id="hry" class="home-view">
         <div class="intro">
-          <h1 tabindex="-1"><span data-en="My mods">Moje mody</span><span class="period">.</span></h1>
-          <p class="intro-text" data-en="Pick a game and see what I'm working on.">Vyber hru a mrkni, co pro ni tvořím.</p>
+          <h1 tabindex="-1"><span id="home-heading"></span><span class="period">.</span></h1>
+          <p id="home-intro" class="intro-text"></p>
         </div>
+        <div id="announcements"></div>
         <nav aria-labelledby="games-heading">
           <div class="section-heading">
             <h2 id="games-heading" data-en="Choose a game">Vyber hru</h2>
           </div>
-          <div class="games">
-            <a class="game-card" href="#derail-valley">
-              <img class="game-art" src="assets/images/games/derail-valley.jpg" width="460" height="215" alt="Derail Valley — logo hry a lokomotiva" data-alt-en="Derail Valley — game logo and locomotive">
-              <span class="game-info"><span><span class="game-name">Derail Valley</span><span class="game-count" data-en="2 mods · Nexus Mods">2 mody · Nexus Mods</span></span><span class="game-arrow" aria-hidden="true">→</span></span>
-            </a>
-            <a class="game-card" href="#transport-fever-3">
-              <img class="game-art" src="assets/images/games/transport-fever-3.jpg" width="460" height="215" alt="Transport Fever 3 — logo hry a dopravní prostředky" data-alt-en="Transport Fever 3 — game logo and vehicles">
-              <span class="game-info"><span><span class="game-name">Transport Fever 3</span><span class="game-count" data-en="2 mods · mod.io">2 mody · mod.io</span></span><span class="game-arrow" aria-hidden="true">→</span></span>
-            </a>
-            <a class="game-card" href="#farming-simulator-25">
-              <img class="game-art" src="assets/images/games/farming-simulator-25.jpg" width="460" height="215" alt="Farming Simulator 25 — logo hry a traktor" data-alt-en="Farming Simulator 25 — game logo and tractor">
-              <span class="game-info"><span><span class="game-name">Farming Simulator 25</span><span class="game-count" data-en="3 mods · plantations and production">3 mody · plantáže a výroba</span></span><span class="game-arrow" aria-hidden="true">→</span></span>
-            </a>
-            <a class="game-card" href="#euro-truck-simulator-2">
-              <img class="game-art" src="assets/images/games/ets2.jpg" width="460" height="215" alt="Euro Truck Simulator 2 — logo hry a kamion" data-alt-en="Euro Truck Simulator 2 — game logo and truck">
-              <span class="game-info"><span><span class="game-name">Euro Truck Simulator 2</span><span class="game-count" data-en="3 projects · not public yet">3 projekty · zatím neveřejné</span></span><span class="game-arrow" aria-hidden="true">→</span></span>
-            </a>
-          </div>
+          <div class="games" id="games"></div>
         </nav>
       </div>
-
-      <section id="derail-valley" class="game-panel" aria-labelledby="dv-title" hidden>
-        <a class="back-link" href="#hry"><span class="back-arrow" aria-hidden="true">←</span><span data-en="All games">Všechny hry</span></a>
-        <div class="game-intro">
-          <p class="eyebrow mono" data-en="02 mods / Nexus Mods">02 mody / Nexus Mods</p>
-          <h1 id="dv-title" tabindex="-1">Derail Valley<span class="period">.</span></h1>
-          <p class="intro-text" data-en="Jobs and locomotive controls.">Zakázky a ovládání lokomotiv.</p>
-        </div>
-        <ol class="mods">
-          <li data-mod="sleeping"><div class="mod-layout"><div class="mod-gallery" data-gallery="sleeping"><button class="media-cover media-contain" type="button" data-view-image aria-label="Zvětšit: Sleeping Resets Jobs — zakázky před spaním a po něm" data-label-en="Enlarge: Sleeping Resets Jobs — jobs before and after sleeping"><img src="assets/images/mods/sleeping/1.webp" width="7680" height="1440" alt="Sleeping Resets Jobs — zakázky před spaním a po něm" data-alt-en="Sleeping Resets Jobs — jobs before and after sleeping" loading="lazy" decoding="async"><span class="image-enlarge" aria-hidden="true">＋</span></button></div>
-            <a class="mod-entry" href="https://www.nexusmods.com/derailvalley/mods/1681" target="_blank" rel="noopener noreferrer">
-              <span class="mod-number mono" aria-hidden="true">01</span>
-              <div><h2>Sleeping Resets Jobs</h2><p class="mod-description" data-en="Refreshes available jobs while you sleep. Old jobs expire and new ones appear based on how long you sleep.">Během spánku obnoví nabídku zakázek. Staré nechá vypršet a vytvoří nové podle toho, jak dlouho spíš.</p><span class="mod-meta"><span class="source">Nexus Mods ↗</span><span data-en="Publicly available">Veřejně dostupné</span></span></div>
-              <span class="mod-arrow" aria-hidden="true">↗</span>
-            </a>
-          </div></li>
-          <li data-mod="mu-controller"><div class="mod-layout"><div class="mod-gallery" data-gallery="mu-controller"><button class="media-cover" type="button" data-view-image aria-label="Zvětšit: Universal MU Controller — propojené lokomotivy" data-label-en="Enlarge: Universal MU Controller — connected locomotives"><img src="assets/images/mods/mu-controller/1.webp" width="1920" height="1080" alt="Universal MU Controller — propojené lokomotivy" data-alt-en="Universal MU Controller — connected locomotives" loading="lazy" decoding="async"><span class="image-enlarge" aria-hidden="true">＋</span></button><div class="gallery-thumbs"><button class="media-thumb" type="button" data-view-image aria-label="Zvětšit: Detail modrého MU propojení lokomotiv" data-label-en="Enlarge: Close-up of the blue MU connection between locomotives"><img src="assets/images/mods/mu-controller/2.webp" width="1920" height="1080" alt="Detail modrého MU propojení lokomotiv" data-alt-en="Close-up of the blue MU connection between locomotives" loading="lazy" decoding="async"></button><button class="media-thumb" type="button" data-view-image aria-label="Zvětšit: MU přípojka na lokomotivě" data-label-en="Enlarge: MU connector on a locomotive"><img src="assets/images/mods/mu-controller/3.webp" width="1920" height="1080" alt="MU přípojka na lokomotivě" data-alt-en="MU connector on a locomotive" loading="lazy" decoding="async"></button></div></div>
-            <a class="mod-entry" href="https://www.nexusmods.com/derailvalley/mods/1558" target="_blank" rel="noopener noreferrer">
-              <span class="mod-number mono" aria-hidden="true">02</span>
-              <div><h2>Universal MU Controller Eneabler</h2><p class="mod-description" data-en="Enables the wireless MU controller for all vanilla locomotives. Adds MU connections to more engines and gear synchronization for the DM3 and DM1U.">Umožní používat bezdrátový MU ovladač se všemi původními lokomotivami. Přidává MU propojení dalším strojům a synchronizaci řazení pro DM3 a DM1U.</p><span class="mod-meta"><span class="source">Nexus Mods ↗</span><span data-en="Publicly available">Veřejně dostupné</span></span></div>
-              <span class="mod-arrow" aria-hidden="true">↗</span>
-            </a>
-          </div></li>
-        </ol>
-      </section>
-
-      <section id="transport-fever-3" class="game-panel" aria-labelledby="tf-title" hidden>
-        <a class="back-link" href="#hry"><span class="back-arrow" aria-hidden="true">←</span><span data-en="All games">Všechny hry</span></a>
-        <div class="game-intro">
-          <p class="eyebrow mono" data-en="02 mods / mod.io">02 mody / mod.io</p>
-          <h1 id="tf-title" tabindex="-1">Transport Fever 3<span class="period">.</span></h1>
-          <p class="intro-text" data-en="Fewer queues, smoother traffic.">Míň kolon, plynulejší doprava.</p>
-        </div>
-        <ol class="mods">
-          <li data-mod="green-wave"><div class="mod-layout"><div class="mod-gallery" data-gallery="green-wave"><button class="media-cover" type="button" data-view-image aria-label="Zvětšit: Traffic Lights: Green Wave — náhled módu" data-label-en="Enlarge: Traffic Lights: Green Wave — mod preview"><img src="assets/images/mods/green-wave/1.webp" width="1280" height="720" alt="Traffic Lights: Green Wave — náhled módu" data-alt-en="Traffic Lights: Green Wave — mod preview" loading="lazy" decoding="async"><span class="image-enlarge" aria-hidden="true">＋</span></button><div class="gallery-thumbs"><button class="media-thumb" type="button" data-view-image aria-label="Zvětšit: Green Wave — nastavení skupin a časování semaforů" data-label-en="Enlarge: Green Wave — group settings and traffic light timing"><img src="assets/images/mods/green-wave/2.webp" width="1280" height="720" alt="Green Wave — nastavení skupin a časování semaforů" data-alt-en="Green Wave — group settings and traffic light timing" loading="lazy" decoding="async"></button><button class="media-thumb" type="button" data-view-image aria-label="Zvětšit: Green Wave — zelená vlna na městské třídě" data-label-en="Enlarge: Green Wave — coordinated traffic lights on a city avenue"><img src="assets/images/mods/green-wave/3.webp" width="1280" height="720" alt="Green Wave — zelená vlna na městské třídě" data-alt-en="Green Wave — coordinated traffic lights on a city avenue" loading="lazy" decoding="async"></button></div></div>
-            <a class="mod-entry" href="https://mod.io/g/transportfever3/m/traffic-lights-green-wave#description" target="_blank" rel="noopener noreferrer">
-              <span class="mod-number mono" aria-hidden="true">01</span>
-              <div><h2>Traffic Lights: Green Wave</h2><p class="mod-description" data-en="Links traffic lights into a green wave. Timing between intersections is calculated from their distance and the selected traffic speed.">Propojí semafory do zelené vlny. Časování mezi křižovatkami dopočítá podle jejich vzdálenosti a zvolené rychlosti provozu.</p><span class="mod-meta"><span class="source">mod.io ↗</span><span data-en="Publicly available">Veřejně dostupné</span></span></div>
-              <span class="mod-arrow" aria-hidden="true">↗</span>
-            </a>
-          </div></li>
-          <li data-mod="delete-car"><div class="mod-layout"><div class="mod-gallery" data-gallery="delete-car"><button class="media-cover" type="button" data-view-image aria-label="Zvětšit: Delete That Car! — náhled módu" data-label-en="Enlarge: Delete That Car! — mod preview"><img src="assets/images/mods/delete-car/1.webp" width="1280" height="720" alt="Delete That Car! — náhled módu" data-alt-en="Delete That Car! — mod preview" loading="lazy" decoding="async"><span class="image-enlarge" aria-hidden="true">＋</span></button></div>
-            <a class="mod-entry" href="https://mod.io/g/transportfever3/m/delete-that-car#description" target="_blank" rel="noopener noreferrer">
-              <span class="mod-number mono" aria-hidden="true">02</span>
-              <div><h2>Delete That Car!</h2><p class="mod-description" data-en="Adds a button to the AI car window to remove the vehicle instantly. Clears the road when a car stuck in the opposite lane is blocking traffic.">Do okna AI auta přidá tlačítko pro jeho okamžité odstranění. Pomůže uvolnit dopravu, když ji blokuje vozidlo zaseknuté v protisměru.</p><span class="mod-meta"><span class="source">mod.io ↗</span><span data-en="Publicly available">Veřejně dostupné</span></span></div>
-              <span class="mod-arrow" aria-hidden="true">↗</span>
-            </a>
-          </div></li>
-        </ol>
-      </section>
-
-      <section id="farming-simulator-25" class="game-panel" aria-labelledby="fs-title" hidden>
-        <a class="back-link" href="#hry"><span class="back-arrow" aria-hidden="true">←</span><span data-en="All games">Všechny hry</span></a>
-        <div class="game-intro">
-          <p class="eyebrow mono" data-en="03 mods / plantations and production">03 mody / plantáže a výroba</p>
-          <h1 id="fs-title" tabindex="-1">Farming Simulator 25<span class="period">.</span></h1>
-          <p class="intro-text" data-en="Plantation workers, adjustable rails and chocolate-covered bananas.">Pracovníci na plantážích, nastavitelné koleje a banány v čokoládě.</p>
-        </div>
-        <ol class="mods">
-          <li data-mod="banana-workers"><div class="mod-layout"><div class="mod-gallery" data-gallery="banana-workers"><button class="media-cover media-contain" type="button" data-view-image aria-label="Zvětšit: More Banana Workers — nastavení 999 pracovníků" data-label-en="Enlarge: More Banana Workers — 999-worker setting"><img src="assets/images/mods/banana-workers/1.webp" width="1920" height="1080" alt="More Banana Workers — nastavení 999 pracovníků" data-alt-en="More Banana Workers — 999-worker setting" loading="lazy" decoding="async"><span class="image-enlarge" aria-hidden="true">＋</span></button></div>
-            <a class="mod-entry" href="https://www.kingmods.net/en/fs25/mods/83821/more-banana-workers" target="_blank" rel="noopener noreferrer">
-              <span class="mod-number mono" aria-hidden="true">01</span>
-              <div><h2>More Banana Workers</h2><p class="mod-description" data-en="Removes the worker limit on banana plantations and adjusts worker costs.">Odstraňuje limit počtu pracovníků na banánových plantážích a upravuje jejich cenu.</p><p class="mod-note" data-en="Requires the Beans &amp; Alpacas Expansion.">Vyžaduje Beans &amp; Alpacas Expansion.</p><span class="mod-meta"><span class="source">KingMods ↗</span><span data-en="Publicly available">Veřejně dostupné</span></span></div>
-              <span class="mod-arrow" aria-hidden="true">↗</span>
-            </a>
-          </div></li>
-          <li data-mod="chocobanana"><div class="mod-layout"><div class="mod-gallery" data-gallery="chocobanana"><button class="media-cover media-contain" type="button" data-view-image aria-label="Zvětšit: ChocoBanana — náhled skutečného modelu továrny" data-label-en="Enlarge: ChocoBanana — preview of the actual factory model"><img src="assets/images/mods/chocobanana/1.webp" width="1024" height="1024" alt="ChocoBanana — náhled skutečného modelu továrny" data-alt-en="ChocoBanana — preview of the actual factory model" loading="lazy" decoding="async"><span class="image-enlarge" aria-hidden="true">＋</span></button><div class="gallery-thumbs"><button class="media-thumb media-contain" type="button" data-view-image aria-label="Zvětšit: ChocoBanana — ikona módu" data-label-en="Enlarge: ChocoBanana — mod icon"><img src="assets/images/mods/chocobanana/2.webp" width="1024" height="1024" alt="ChocoBanana — ikona módu" data-alt-en="ChocoBanana — mod icon" loading="lazy" decoding="async"></button></div></div>
-            <article class="mod-entry">
-              <span class="mod-number mono" aria-hidden="true">02</span>
-              <div><h2 data-en="ChocoBanana — chocolate-covered banana production">ChocoBanana — továrna na banány v čokoládě</h2><p class="mod-description" data-en="A custom factory producing chocolate-covered bananas, complete with an interior and production machinery. Still in development.">Vlastní továrna na výrobu banánů v čokoládě, s interiérem a výrobními stroji. Na módu ještě pracuju.</p><span class="mod-meta"><span class="badge" data-en="In development">Rozpracované</span><span data-en="Not publicly available for download yet">Zatím není veřejně ke stažení</span></span></div>
-            </article>
-          </div></li>
-          <li data-mod="banana-rails">
-            <article class="mod-entry">
-              <span class="mod-number mono" aria-hidden="true">03</span>
-              <div><h2 data-en="Banana Rail Height">Výška banánových kolejí</h2><p class="mod-description" data-en="Lets you adjust the height of banana plantation rails from the Beans &amp; Alpacas Expansion.">Umožňuje upravit výšku kolejí pro banánové plantáže z rozšíření Beans &amp; Alpacas.</p><span class="mod-meta"><span class="badge" data-en="No link yet">Zatím bez odkazu</span><span data-en="Download link to be added">Odkaz ke stažení doplním</span></span></div>
-            </article>
-          </li>
-        </ol>
-      </section>
-
-      <section id="euro-truck-simulator-2" class="game-panel" aria-labelledby="ets-title" hidden>
-        <a class="back-link" href="#hry"><span class="back-arrow" aria-hidden="true">←</span><span data-en="All games">Všechny hry</span></a>
-        <div class="game-intro">
-          <p class="eyebrow mono" data-en="03 projects / not public yet">03 projekty / zatím neveřejné</p>
-          <h1 id="ets-title" tabindex="-1">Euro Truck Simulator 2<span class="period">.</span></h1>
-          <p class="intro-text" data-en="A camera for convoy videos and mods for Coaches.">Kamera pro natáčení konvojů a úpravy pro Coaches.</p>
-        </div>
-        <ol class="mods">
-          <li data-mod="coaches"><div class="mod-layout"><div class="mod-gallery" data-gallery="coaches"><button class="media-cover" type="button" data-view-image aria-label="Zvětšit: Coaches — české hlášky z OMSI, náhled módu" data-label-en="Enlarge: Coaches — Czech voice lines from OMSI, mod preview"><img src="assets/images/mods/coaches/1.webp" width="1672" height="941" alt="Coaches — české hlášky z OMSI, náhled módu" data-alt-en="Coaches — Czech voice lines from OMSI, mod preview" loading="lazy" decoding="async"><span class="image-enlarge" aria-hidden="true">＋</span></button></div>
-            <article class="mod-entry">
-              <span class="mod-number mono" aria-hidden="true">01</span>
-              <div><h2 data-en="Coaches — Czech voice lines from OMSI">Coaches — české hlášky z OMSI</h2><p class="mod-description" data-en="Czech passenger reactions from OMSI during Coaches jobs, including Tourist Jobs. Also supports Karosa buses from the 95X Pack.">České reakce cestujících z OMSI při autobusových zakázkách v Coaches, včetně Tourist Jobu. Podpora také pro Karosy z 95X Packu.</p><span class="mod-meta"><span class="badge" data-en="Not public">Neveřejné</span><span data-en="Coaches / Czech voice lines">Coaches / české hlášky</span></span></div>
-            </article>
-          </div></li>
-          <li data-mod="cinematic-camera">
-            <article class="mod-entry">
-              <span class="mod-number mono" aria-hidden="true">02</span>
-              <div><h2>Cinematic Camera</h2><p class="mod-description" data-en="Smooth flyovers, flights along saved paths and orbits around a point. Adjustable speed, rotation and field of view for filming convoys.">Plynulé přelety, let po uložené trase i kroužení kolem bodu. Nastavení rychlosti, natočení a zorného pole pro natáčení konvojů.</p><span class="mod-meta"><span class="badge" data-en="Not public">Neveřejné</span><span data-en="Convoy Camera / free camera">Convoy Camera / volná kamera</span></span></div>
-            </article>
-          </li>
-          <li data-mod="coachmirror">
-            <article class="mod-entry">
-              <span class="mod-number mono" aria-hidden="true">03</span>
-              <div><h2 data-en="CoachMirror — navigation and camera">CoachMirror — navigace a kamera</h2><p class="mod-description" data-en="Navigation and a camera feed side by side on the bus display. Optional floating mirror, speed limit, schedule delay or lead time, and a G-meter.">Navigace a obraz kamery vedle sebe na displeji autobusu. Volitelné plovoucí zrcátko, rychlostní limit, zpoždění či náskok zakázky a G-meter.</p><span class="mod-meta"><span class="badge" data-en="Not public">Neveřejné</span><span data-en="Coaches / in-cab display">Coaches / displej v kabině</span></span></div>
-            </article>
-          </li>
-        </ol>
-        <p class="panel-note" data-en="These three projects are not publicly available for download yet.">Tyhle tři projekty zatím nejsou veřejně ke stažení.</p>
-      </section>
+      <div id="game-view" hidden></div>
     </main>
+    <footer class="site-tools">
+      <a href="admin.html" data-en="Site admin">Správa webu</a>
+    </footer>
 
   </div>
   <dialog class="image-viewer" aria-labelledby="viewer-caption">
@@ -186,6 +73,8 @@
       <button class="viewer-button viewer-next" type="button" aria-label="Další obrázek" data-label-en="Next image">→</button>
     </div>
   </dialog>
+  <script src="assets/js/catalog-format.js"></script>
+  <script src="assets/data/catalog.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>

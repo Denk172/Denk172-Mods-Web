@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' blob:; connect-src https://api.github.com; base-uri 'none'; form-action 'none'">
+  <title>Správa webu · Denk172 Mods</title>
+  <script src="assets/js/init.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="admin-page">
+  <div class="page admin-page-inner">
+    <header class="header admin-header">
+      <a class="wordmark" href="index.html">Denk172 Mods</a>
+      <button class="admin-button" id="disconnect" type="button" hidden>Odhlásit</button>
+    </header>
+    <main>
+      <div class="admin-heading">
+        <h1>Správa webu</h1>
+        <p id="admin-context">Připoj repozitář, ze kterého GitHub Pages zobrazuje tvůj web.</p>
+      </div>
+      <p id="admin-unavailable" class="admin-message" hidden>Otevři správu přímo na zveřejněném webu přes HTTPS.</p>
+      <noscript><p>Pro správu webu povol JavaScript.</p></noscript>
+      <section class="admin-login" id="login-panel" hidden>
+        <form id="login-form" method="post" autocomplete="off">
+          <h2>Připojit GitHub</h2>
+          <label class="admin-field">
+            <span>Repozitář</span>
+            <input id="repo" placeholder="uzivatel/denk172-mods" required spellcheck="false" autocomplete="off">
+          </label>
+          <div class="admin-columns">
+            <label class="admin-field">
+              <span>Větev</span>
+              <input id="branch" placeholder="Výchozí větev, obvykle main" maxlength="180" spellcheck="false" autocomplete="off">
+            </label>
+            <label class="admin-field">
+              <span>Složka GitHub Pages</span>
+              <select id="prefix">
+                <option value="">/ (root)</option>
+                <option value="docs">/docs</option>
+              </select>
+            </label>
+          </div>
+          <label class="admin-field">
+            <span>Přístupový klíč GitHubu</span>
+            <input id="token" type="password" placeholder="github_pat_…" required autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="token-help">
+            <small id="token-help">Klíč se po odhlášení nebo zavření stránky zapomene.</small>
+          </label>
+          <details class="admin-help">
+            <summary>Jak získat klíč</summary>
+            <ol>
+              <li>Na GitHubu otevři <a id="token-guide" href="https://github.com/settings/personal-access-tokens/new?name=Denk172+Mods+editor&amp;contents=write" target="_blank" rel="noopener noreferrer">vytvoření fine-grained tokenu</a>.</li>
+              <li>Vyber <strong>Only select repositories</strong> a repozitář svého webu.</li>
+              <li>Nastav <strong>Contents → Read and write</strong>, vytvoř klíč a vlož ho sem.</li>
+            </ol>
+          </details>
+          <button class="admin-button primary" id="connect" type="submit">Připojit</button>
+          <p class="admin-message" id="login-message" role="status" hidden></p>
+        </form>
+      </section>
+
+      <section id="editor-panel" aria-label="Editor obsahu" hidden>
+        <nav class="admin-tabs" id="editor-nav" aria-label="Co chceš spravovat">
+          <button type="button" data-section="mods" aria-pressed="true">Mody</button>
+          <button type="button" data-section="games" aria-pressed="false">Hry</button>
+          <button type="button" data-section="categories" aria-pressed="false">Kategorie</button>
+          <button type="button" data-section="announcements" aria-pressed="false">Oznámení</button>
+          <button type="button" data-section="settings" aria-pressed="false">Nastavení</button>
+        </nav>
+        <div class="editor-grid" id="editor-grid">
+          <aside class="admin-list" id="admin-sidebar">
+            <div class="admin-list-top">
+              <h2 id="list-title">Mody</h2>
+              <button class="admin-button" id="add-record" type="button">Přidat mód</button>
+            </div>
+            <ul id="record-list"></ul>
+          </aside>
+          <section class="admin-record" aria-labelledby="record-title">
+            <form id="record-form" method="post" autocomplete="off">
+              <h2 id="record-title" tabindex="-1">Vyber položku</h2>
+              <div id="record-fields"></div>
+              <div id="record-actions" class="admin-inline" hidden>
+                <button class="admin-button" type="submit">Uložit do změn</button>
+                <button class="admin-button quiet" type="button" id="cancel-edit">Zrušit úpravy</button>
+              </div>
+              <p class="admin-message" id="form-message" role="status" hidden></p>
+            </form>
+          </section>
+        </div>
+        <div class="publish-bar" id="publish-bar">
+          <div>
+            <p id="publish-status" role="status">Bez změn.</p>
+            <a class="commit-link" id="commit-link" target="_blank" rel="noopener noreferrer" hidden>Zobrazit změnu na GitHubu</a>
+          </div>
+          <div class="admin-inline">
+            <button class="admin-button quiet" type="button" id="reload-catalog">Načíst z GitHubu</button>
+            <button class="admin-button primary" type="button" id="publish" disabled>Zveřejnit změny</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="assets/js/catalog-format.js"></script>
+  <script src="assets/js/github-editor.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>
