@@ -96,7 +96,7 @@
         additions.push({ path: format.filePath(prefix, path), contents: encodeBytes(new Uint8Array(await file.arrayBuffer())) });
       }
       const input = {
-        branch: { repositoryNameWithOwner: target.repo, refName: 'refs/heads/' + target.branch },
+        branch: { repositoryNameWithOwner: target.repo, branchName: target.branch },
         expectedHeadOid: head,
         message: { headline: 'Update Denk172 Mods catalog' },
         fileChanges: { additions },
