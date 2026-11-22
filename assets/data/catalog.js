@@ -1,6 +1,6 @@
 globalThis.DENK172_DATA = {
   "format": "denk172-catalog/1",
-  "updatedAt": "2026-11-22T10:22:32.789Z",
+  "updatedAt": "2026-11-22T10:23:16.812Z",
   "publication": {
     "repo": "Denk172/Denk172-Mods-Web",
     "branch": "main",
@@ -22,7 +22,7 @@ globalThis.DENK172_DATA = {
         "en": "WIP"
       },
       "message": {
-        "cs": "Tato stránka je stále ve vývoji, očekávejte chyby\"",
+        "cs": "Tato stránka je stále ve vývoji, očekávejte chyby!",
         "en": "This site is still in development, expect bugs!"
       }
     }
