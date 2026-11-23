@@ -1,6 +1,6 @@
 globalThis.DENK172_DATA = {
   "format": "denk172-catalog/1",
-  "updatedAt": "2026-11-23T16:05:46.557Z",
+  "updatedAt": "2026-11-23T16:08:41.161Z",
   "publication": {
     "repo": "Denk172/Denk172-Mods-Web",
     "branch": "main",
@@ -476,8 +476,8 @@ globalThis.DENK172_DATA = {
       "visible": true,
       "gameId": "euro-truck-simulator-2",
       "description": {
-        "cs": "České reakce cestujících z OMSI při autobusových zakázkách v Coaches, včetně Tourist Jobu. Podpora také pro Karosy z 95X Packu.",
-        "en": "Czech passenger reactions from OMSI during Coaches jobs, including Tourist Jobs. Also supports Karosa buses from the 95X Pack."
+        "cs": "České reakce cestujících z OMSI. Podpora také pro Karosy z 95X Packu.",
+        "en": "Czech passenger reactions from OMSI. Also supports Karosa buses from the 95X Pack."
       },
       "note": {
         "cs": "",
