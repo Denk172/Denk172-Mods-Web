@@ -1,6 +1,6 @@
 globalThis.DENK172_DATA = {
   "format": "denk172-catalog/1",
-  "updatedAt": "2026-11-22T10:23:52.207Z",
+  "updatedAt": "2026-11-23T16:05:46.557Z",
   "publication": {
     "repo": "Denk172/Denk172-Mods-Web",
     "branch": "main",
@@ -86,15 +86,15 @@ globalThis.DENK172_DATA = {
         "cs": "Farming Simulator 25",
         "en": "Farming Simulator 25"
       },
-      "description": {
-        "cs": "Pracovníci na plantážích, nastavitelné koleje a banány v čokoládě.",
-        "en": "Plantation workers, adjustable rails and chocolate-covered bananas."
-      },
-      "caption": {
-        "cs": "Plantáže a výroba",
-        "en": "Plantations and production"
-      },
       "visible": true,
+      "caption": {
+        "cs": "",
+        "en": ""
+      },
+      "description": {
+        "cs": "",
+        "en": ""
+      },
       "cover": {
         "src": "assets/images/games/farming-simulator-25.jpg",
         "caption": {
@@ -112,15 +112,15 @@ globalThis.DENK172_DATA = {
         "cs": "Euro Truck Simulator 2",
         "en": "Euro Truck Simulator 2"
       },
-      "description": {
-        "cs": "Kamera pro natáčení konvojů a úpravy pro Coaches.",
-        "en": "A camera for convoy videos and mods for Coaches."
-      },
-      "caption": {
-        "cs": "Coaches a konvoje",
-        "en": "Coaches and convoys"
-      },
       "visible": true,
+      "caption": {
+        "cs": "",
+        "en": ""
+      },
+      "description": {
+        "cs": "",
+        "en": ""
+      },
       "cover": {
         "src": "assets/images/games/ets2.jpg",
         "caption": {
@@ -469,11 +469,12 @@ globalThis.DENK172_DATA = {
     },
     {
       "id": "coaches",
-      "gameId": "euro-truck-simulator-2",
       "title": {
         "cs": "Coaches — české hlášky z OMSI",
         "en": "Coaches — Czech voice lines from OMSI"
       },
+      "visible": true,
+      "gameId": "euro-truck-simulator-2",
       "description": {
         "cs": "České reakce cestujících z OMSI při autobusových zakázkách v Coaches, včetně Tourist Jobu. Podpora také pro Karosy z 95X Packu.",
         "en": "Czech passenger reactions from OMSI during Coaches jobs, including Tourist Jobs. Also supports Karosa buses from the 95X Pack."
@@ -482,14 +483,13 @@ globalThis.DENK172_DATA = {
         "cs": "",
         "en": ""
       },
+      "status": "released",
+      "version": "0.7",
+      "platform": "",
+      "url": "https://github.com/Denk172/ETS2_Coaches-Ceske-Hlasky-OMSI/tree/main",
       "categoryIds": [
         "audio"
       ],
-      "status": "unlisted",
-      "version": "",
-      "url": "",
-      "platform": "",
-      "visible": true,
       "images": [
         {
           "src": "assets/images/mods/coaches/1.webp",
