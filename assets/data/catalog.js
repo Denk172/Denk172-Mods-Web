@@ -1,6 +1,6 @@
 globalThis.DENK172_DATA = {
   "format": "denk172-catalog/1",
-  "updatedAt": "2026-11-24T19:09:44.600Z",
+  "updatedAt": "2026-11-24T19:14:57.829Z",
   "publication": {
     "repo": "Denk172/Denk172-Mods-Web",
     "branch": "main",
@@ -577,6 +577,32 @@ globalThis.DENK172_DATA = {
       "url": "",
       "platform": "",
       "visible": true,
+      "images": []
+    },
+    {
+      "id": "trolleybuses",
+      "title": {
+        "cs": "Trolejbusy",
+        "en": "Trolleybuses"
+      },
+      "visible": true,
+      "gameId": "cities-skylines-ii",
+      "description": {
+        "cs": "Přidá novou možnost trolejbusů i s přidáním trolejí nad silnici",
+        "en": "Adds new trolleybuses with  the option to add trolleys above the road"
+      },
+      "note": {
+        "cs": "",
+        "en": ""
+      },
+      "status": "wip",
+      "version": "",
+      "platform": "",
+      "url": "",
+      "categoryIds": [
+        "gameplay",
+        "traffic"
+      ],
       "images": []
     }
   ],
