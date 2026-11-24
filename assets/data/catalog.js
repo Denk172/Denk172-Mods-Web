@@ -1,6 +1,6 @@
 globalThis.DENK172_DATA = {
   "format": "denk172-catalog/1",
-  "updatedAt": "2026-11-23T16:08:41.161Z",
+  "updatedAt": "2026-11-24T19:09:44.600Z",
   "publication": {
     "repo": "Denk172/Denk172-Mods-Web",
     "branch": "main",
@@ -128,6 +128,32 @@ globalThis.DENK172_DATA = {
           "en": "Euro Truck Simulator 2 — game logo and truck"
         },
         "fit": "cover",
+        "width": 460,
+        "height": 215
+      }
+    },
+    {
+      "id": "cities-skylines-ii",
+      "name": {
+        "cs": "Cities Skylines II",
+        "en": "Cities Skylines II"
+      },
+      "visible": true,
+      "caption": {
+        "cs": "",
+        "en": ""
+      },
+      "description": {
+        "cs": "",
+        "en": ""
+      },
+      "cover": {
+        "src": "assets/images/uploads/games/cities-skylines-ii/6fc67121-a241-4584-986a-032d67c51400.jpg",
+        "caption": {
+          "cs": "CSII_logo",
+          "en": "CSII_logo"
+        },
+        "fit": "contain",
         "width": 460,
         "height": 215
       }
